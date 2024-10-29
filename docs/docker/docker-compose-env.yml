@@ -1,0 +1,191 @@
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - mysql_conf:/etc/mysql/conf.d
+      - mysql_log:/var/log/mysql
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1G
+    networks:
+      - health_network
+
+  redis:
+    image: redis:7
+    container_name: redis
+    command: redis-server --appendonly yes --requirepass 114514
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+    networks:
+      - health_network
+
+  rabbitmq:
+    build:
+      context: ../..
+      dockerfile: docs/docker/Dockerfile.rabbitmq
+    image: rabbitmq_delay:3.13
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: 114514
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - rabbitmq_log:/var/log/rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+    networks:
+      - health_network
+
+  elasticsearch:
+    image: elasticsearch:7.17.24
+    container_name: elasticsearch
+    environment:
+      - "cluster.name=elasticsearch"
+      - "discovery.type=single-node"
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    volumes:
+      - elasticsearch_plugins:/usr/share/elasticsearch/plugins
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1G
+    networks:
+      - health_network
+
+  logstash:
+    image: logstash:7.17.24
+    container_name: logstash
+    links:
+      - elasticsearch:es
+    volumes:
+      - ../../docs/elk/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - app_logs:/var/log/app:ro
+    environment:
+      - TZ=Asia/Shanghai
+      - LOG_PATH=/var/log/app
+      - ES_HOST=es
+      - ES_PORT=9200
+    depends_on:
+      - elasticsearch
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+    networks:
+      - health_network
+
+  kibana:
+    image: kibana:7.17.24
+    container_name: kibana
+    links:
+      - elasticsearch:es
+    depends_on:
+      - elasticsearch
+    environment:
+      - "ELASTICSEARCH_HOSTS=http://es:9200"
+    ports:
+      - "5601:5601"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+    networks:
+      - health_network
+
+  mongo:
+    image: mongo:4
+    container_name: mongo
+    volumes:
+      - mongo_data:/data/db
+      - mongo_config:/data/configdb
+    ports:
+      - "27017:27017"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+    networks:
+      - health_network
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+    networks:
+      - health_network
+
+volumes:
+  mysql_data:
+    name: health_mysql_data
+  mysql_conf:
+    name: health_mysql_conf
+  mysql_log:
+    name: health_mysql_log
+  redis_data:
+    name: health_redis_data
+  rabbitmq_data:
+    name: health_rabbitmq_data
+  rabbitmq_log:
+    name: health_rabbitmq_log
+  elasticsearch_plugins:
+    name: health_elasticsearch_plugins
+  elasticsearch_data:
+    name: health_elasticsearch_data
+  app_logs:
+    name: health_app_logs
+  mongo_data:
+    name: health_mongo_data
+  mongo_config:
+    name: health_mongo_config
+  minio_data:
+    name: health_minio_data
+
+networks:
+  health_network:
+    name: health_network
+    driver: bridge
+    external: true

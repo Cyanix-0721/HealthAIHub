@@ -1,0 +1,8 @@
+# 使用官方 rabbitmq 镜像作为基础镜像
+FROM rabbitmq:3.13-management
+
+# 添加插件
+ADD docs/rabbitmq/rabbitmq_delayed_message_exchange-3.13.0.ez /plugins/
+
+# 启用插件
+RUN rabbitmq-plugins enable --offline rabbitmq_delayed_message_exchange

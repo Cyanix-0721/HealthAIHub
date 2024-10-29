@@ -1,0 +1,79 @@
+/* Element Plus 暗色主题 */
+:root {
+  --el-color-primary: var(--color-primary);
+  --el-color-primary-light-3: var(--color-primary-hover);
+  --el-bg-color: var(--color-background);
+  --el-text-color-primary: var(--color-text);
+  --el-border-color: var(--color-border);
+}
+
+/* 通用样式 */
+.el-button {
+  background-color: var(--el-color-primary);
+  border-color: var(--el-color-primary);
+  color: var(--vt-c-white);
+}
+
+.el-button:hover {
+  background-color: var(--el-color-primary-light-3);
+  border-color: var(--el-color-primary-light-3);
+}
+
+.el-input__inner {
+  background-color: var(--vt-c-white);
+  border-color: var(--color-border);
+  color: var(--vt-c-black);
+}
+
+.el-input__inner::placeholder {
+  color: var(--vt-c-text-light-2);
+}
+
+/* 自定义 Tab 样式 */
+.custom-tabs .el-tabs__item {
+  color: var(--vt-c-white);
+  font-size: 18px;
+}
+
+.custom-tabs .el-tabs__item.is-active {
+  color: var(--el-color-primary);
+}
+
+.custom-tabs .el-tabs__item:hover {
+  color: var(--el-color-primary-light-3);
+}
+
+.custom-tabs .el-tabs__nav-wrap::after {
+  background-color: var(--color-border);
+}
+
+.custom-tabs .el-tabs__active-bar {
+  background-color: var(--el-color-primary);
+}
+
+/* 自定义表单样式 */
+.custom-form {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.custom-form-item {
+  margin-bottom: 20px;
+}
+
+.custom-input {
+  width: 100%;
+}
+
+.el-form-item__content {
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* 按钮容器样式 */
+.button-container {
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+  margin-top: 20px;
+}

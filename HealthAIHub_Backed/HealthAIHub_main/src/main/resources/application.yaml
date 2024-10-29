@@ -1,0 +1,105 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  application:
+    name: HealthAIHub_Backed
+  main:
+    banner-mode: off
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      logic-delete-value: 0
+      logic-not-delete-value: 1
+    banner: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    env:
+      show-values: always
+    configprops:
+      show-values: always
+    info:
+      enabled: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    doc-expansion: "none"
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  group-configs:
+    - group: "default"
+      packages-to-scan: com.mole.health
+  default-flat-param-object: false
+
+knife4j:
+  enable: true
+
+sa-token:
+  token-name: Authorization
+  timeout: 604800
+  active-timeout: -1
+  is-concurrent: true
+  is-share: false
+  token-style: uuid
+  is-log: false
+  is-read-cookie: false
+  is-read-header: true
+  token-prefix: Bearer
+  jwt-secret-key: puolikaumjhnygbdfvdcsxa
+  is-print: false
+
+minio:
+  bucketPolicy: |
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Principal": {
+            "AWS": ["*"]
+          },
+          "Action": [
+            "s3:GetBucketLocation",
+            "s3:ListBucket",
+            "s3:ListBucketMultipartUploads"
+          ],
+          "Resource": ["arn:aws:s3:::your-bucket-name"]
+        },
+        {
+          "Effect": "Allow",
+          "Principal": {
+            "AWS": ["*"]
+          },
+          "Action": [
+            "s3:GetObject",
+            "s3:ListMultipartUploadParts",
+            "s3:PutObject",
+            "s3:AbortMultipartUpload",
+            "s3:DeleteObject"
+          ],
+          "Resource": ["arn:aws:s3:::your-bucket-name/*"]
+        }
+      ]
+    }

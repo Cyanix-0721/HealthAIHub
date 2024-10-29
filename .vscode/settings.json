@@ -1,0 +1,20 @@
+{
+    "cSpell.words": [
+        "Configurer",
+        "Cyanix",
+        "healthaihub",
+        "healthicons",
+        "iconify",
+        "jdbc",
+        "minio",
+        "mmol",
+        "Persistedstate",
+        "Pinia",
+        "Qianfan",
+        "rabbitmq",
+        "servlet",
+        "springframework",
+        "unplugin"
+    ],
+    "java.compile.nullAnalysis.mode": "automatic"
+}

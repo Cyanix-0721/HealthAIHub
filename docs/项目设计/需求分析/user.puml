@@ -1,0 +1,62 @@
+@startuml user
+left to right direction
+actor "用户" as user
+
+usecase "用户管理模块" as UCM1
+usecase "健康数据管理模块" as UCM2
+usecase "大模型互动模块" as UCM3
+usecase "社交功能模块" as UCM4
+usecase "消息通知模块" as UCM5
+
+usecase "注册/登录" as UC1
+usecase "管理个人信息" as UC2
+
+usecase "记录健康数据" as UC3
+usecase "查询健康数据" as UC4
+usecase "获取个性化健康建议" as UC5
+usecase "分享健康数据" as UC6
+usecase "更新健康数据" as UC14
+
+usecase "与大模型交互" as UC7
+usecase "查看大模型使用记录" as UC12
+
+usecase "管理好友" as UC8
+usecase "发送私信" as UC9
+usecase "参与聊天室" as UC11
+
+usecase "接收实时通知" as UC10
+
+user --> UCM1
+user --> UCM2
+user --> UCM3
+user --> UCM4
+user --> UCM5
+
+UCM1 --> UC1
+UCM1 --> UC2
+
+UCM2 --> UC3
+UCM2 --> UC4
+UCM2 --> UC5
+UCM2 --> UC6
+UCM2 --> UC14
+
+UCM3 --> UC7
+UCM3 --> UC12
+
+UCM4 --> UC8
+UCM4 --> UC9
+UCM4 --> UC11
+
+UCM5 --> UC10
+
+UC2 ..> UC1 : <<include>>
+UC4 ..> UC3 : <<extend>>
+UC14 ..> UC3 : <<include>>
+UC5 ..> UC7 : <<include>>
+UC6 ..> UC9 : <<include>>
+UC12 ..> UC7 : <<extend>>
+UC9 ..> UC8 : <<include>>
+UC11 ..> UC9 : <<extend>>
+
+@enduml

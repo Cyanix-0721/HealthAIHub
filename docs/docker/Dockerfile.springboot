@@ -1,0 +1,11 @@
+FROM openjdk:17-jdk-slim
+
+WORKDIR /app
+
+COPY HealthAIHub_Backed/HealthAIHub_main/target/HealthAIHub_main-1.0.jar app.jar
+
+COPY HealthAIHub_Backed/HealthAIHub_main/src/main/resources/application*.yaml /app/
+
+EXPOSE 8080
+
+CMD ["java", "-jar", "app.jar"]

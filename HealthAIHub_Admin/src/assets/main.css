@@ -1,0 +1,38 @@
+@import './base.css';
+
+/* 移除对 #app 的 max-width 和 margin 设置 */
+#app {
+  /* max-width: 1280px; */
+  /* margin: 0 auto; */
+  padding: 0; /* 移除额外的padding以避免影响布局 */
+  font-weight: normal;
+}
+
+a,
+.green {
+  text-decoration: none;
+  color: hsla(160, 100%, 37%, 1);
+  transition: 0.4s;
+  padding: 3px;
+}
+
+@media (hover: hover) {
+  a:hover {
+    background-color: hsla(160, 100%, 37%, 0.2);
+  }
+}
+
+@media (min-width: 1024px) {
+  body {
+    /* 移除对 body 的 flex 布局 */
+    /* display: flex; */
+    /* place-items: center; */
+  }
+
+  #app {
+    /* 移除 grid 布局 */
+    /* display: grid; */
+    /* grid-template-columns: 1fr 1fr; */
+    padding: 0; /* 移除左右padding */
+  }
+}

@@ -1,0 +1,29 @@
+@startuml admin
+left to right direction
+actor "管理员" as admin
+
+usecase "用户管理模块" as UCM1
+usecase "系统日志模块" as UCM2
+usecase "健康数据管理模块" as UCM3
+
+usecase "查看用户信息" as UC1
+usecase "禁用用户账号" as UC2
+usecase "查看系统操作日志" as UC3
+usecase "查看用户与大模型交互记录" as UC4
+usecase "查询用户健康数据" as UC5
+usecase "修改用户健康数据" as UC6
+
+admin --> UCM1
+admin --> UCM2
+admin --> UCM3
+
+UCM1 --> UC1
+UCM1 --> UC2
+
+UCM2 --> UC3
+UCM2 --> UC4
+
+UCM3 --> UC5
+UCM3 --> UC6
+
+@enduml

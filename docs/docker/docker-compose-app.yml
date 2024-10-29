@@ -1,0 +1,78 @@
+services:
+  nginx_user:
+    build:
+      context: ../..
+      dockerfile: docs/docker/Dockerfile.nginx.user
+    image: nginx_health:user
+    container_name: nginx_user
+    volumes:
+      - nginx_html_user:/usr/share/nginx/html
+      - nginx_log_user:/var/log/nginx
+    ports:
+      - "80:80"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+    networks:
+      - health_network
+
+  nginx_admin:
+    build:
+      context: ../..
+      dockerfile: docs/docker/Dockerfile.nginx.admin
+    image: nginx_health:admin
+    container_name: nginx_admin
+    volumes:
+      - nginx_html_admin:/usr/share/nginx/html
+      - nginx_log_admin:/var/log/nginx
+    ports:
+      - "81:80"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+    networks:
+      - health_network
+
+  springboot:
+    build:
+      context: ../..
+      dockerfile: docs/docker/Dockerfile.springboot
+    image: healthaihub:1.0
+    container_name: springboot
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env.spring
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+    volumes:
+      - app_logs:/var/log/app
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1G
+    networks:
+      - health_network
+
+volumes:
+  nginx_html_user:
+    name: health_nginx_user_html
+  nginx_html_admin:
+    name: health_nginx_admin_html
+  nginx_log_user:
+    name: health_nginx_user_log
+  nginx_log_admin:
+    name: health_nginx_admin_log
+  app_logs:
+    name: health_app_logs
+
+networks:
+  health_network:
+    name: health_network
+    driver: bridge
+    external: true
